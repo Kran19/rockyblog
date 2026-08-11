@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma"
 export const dynamic = "force-dynamic"
 export const revalidate = 3600 // Revalidate sitemap every hour for fresh updates
 
-const BASE_URL = process.env.NEXTAUTH_URL || process.env.AUTH_URL || "https://betsetgo.xyz"
+const BASE_URL = process.env.NEXTAUTH_URL || process.env.AUTH_URL || "https://stock-247.com"
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const currentDate = new Date()

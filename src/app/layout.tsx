@@ -12,24 +12,24 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://betsetgo.xyz"),
-  title: "betsetgo.xyz - Premium Gaming Blog",
-  description: "A premium gaming blog covering eSports, RPGs, and the latest in the gaming world.",
+  metadataBase: new URL("https://stock-247.com"),
+  title: "Stock247 - Real-Time Market Insights, Stock Signals & Trading Guides",
+  description: "Elite destination for stock market analysis, options trading strategies, algorithmic market insights, and crash game mechanics.",
   alternates: {
     canonical: "/",
   },
   openGraph: {
-    title: "betsetgo.xyz - Premium Gaming Blog",
-    description: "A premium gaming blog covering eSports, RPGs, and the latest in the gaming world.",
+    title: "Stock247 - Real-Time Market Insights, Stock Signals & Trading Guides",
+    description: "Elite destination for stock market analysis, options trading strategies, algorithmic market insights, and crash game mechanics.",
     url: "/",
-    siteName: "betsetgo.xyz",
+    siteName: "Stock247",
     locale: "en_US",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "betsetgo.xyz - Premium Gaming Blog",
-    description: "A premium gaming blog covering eSports, RPGs, and the latest in the gaming world.",
+    title: "Stock247 - Real-Time Market Insights & Stock Signals",
+    description: "Elite destination for stock market analysis, options trading strategies, algorithmic market insights, and crash game mechanics.",
   },
   verification: {
     google: "GwBrIU3Un37BTLPfnQINBwTKAjWjO4zTcVVAqkvt3Dw",

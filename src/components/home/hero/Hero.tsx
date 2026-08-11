@@ -7,18 +7,17 @@ import Lenis from "lenis"
 
 import { GradientBackground } from "./GradientBackground"
 import { FloatingParticles } from "./FloatingParticles"
-import { HeroColumns } from "./HeroColumns"
+import { TradingTickerBar } from "./TradingTickerBar"
 import { HeroContent } from "./HeroContent"
+import { InteractiveCandleChart } from "./InteractiveCandleChart"
 
 gsap.registerPlugin(ScrollTrigger)
 
 export function Hero() {
   const containerRef = useRef<HTMLDivElement>(null)
-  const columnsWrapperRef = useRef<HTMLDivElement>(null)
-  const contentWrapperRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    // 1. Initialize Lenis for Smooth Scrolling
+    // Initialize Lenis for Smooth Scrolling
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -35,42 +34,33 @@ export function Hero() {
     }
     requestAnimationFrame(raf)
 
-    // 2. Scroll Trigger (Scale columns slightly on scroll down)
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: containerRef.current,
-        start: "top top",
-        end: "bottom top",
-        scrub: 1,
-      }
-    })
-    
-    tl.to(columnsWrapperRef.current, {
-      scale: 1.05,
-      ease: "none"
-    }, 0)
-
     return () => {
       lenis.destroy()
-      tl.kill()
-      ScrollTrigger.getAll().forEach(t => t.kill())
     }
   }, [])
 
   return (
     <section 
       ref={containerRef} 
-      className="relative w-full h-[100vh] overflow-hidden bg-[#060606]"
+      className="relative w-full min-h-screen overflow-hidden bg-[#06080D] flex flex-col justify-between"
     >
+      {/* Top Scrolling Financial Ticker */}
+      <TradingTickerBar />
+
       <GradientBackground />
       <FloatingParticles />
       
-      <div ref={columnsWrapperRef} className="absolute inset-0 w-full h-full z-0">
-        <HeroColumns />
+      {/* Hero Central Content */}
+      <HeroContent />
+
+      {/* Interactive Candlestick Chart Preview */}
+      <div className="px-4 pb-16 z-20">
+        <InteractiveCandleChart />
       </div>
-      
+
       {/* Bottom gradient fade */}
       <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-background to-transparent z-30 pointer-events-none" />
     </section>
   )
 }
+

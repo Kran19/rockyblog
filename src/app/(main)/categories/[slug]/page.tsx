@@ -16,7 +16,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!category) return { title: 'Category Not Found' };
 
   return {
-    title: `${category.name} - betsetgo.xyz`,
+    title: `${category.name} - Stock247`,
     description: category.description || `Browse all posts in the ${category.name} category.`,
     alternates: {
       canonical: `/categories/${category.slug}`,

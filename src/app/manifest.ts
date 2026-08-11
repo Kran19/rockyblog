@@ -2,12 +2,12 @@ import type { MetadataRoute } from 'next'
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'BetSetGo Premium Gaming Blog',
-    short_name: 'BetSetGo',
-    description: 'A premium gaming blog covering eSports, RPGs, and the latest in the gaming world.',
+    name: 'Stock247 Financial Market & Trading Telemetry',
+    short_name: 'Stock247',
+    description: 'Real-Time Market Insights, Stock Signals, Options Strategies, and High-Speed Trading Guides.',
     start_url: '/',
     display: 'standalone',
-    background_color: '#000000',
+    background_color: '#06080D',
     theme_color: '#00D09C',
     icons: [
       {
@@ -23,3 +23,4 @@ export default function manifest(): MetadataRoute.Manifest {
     ],
   }
 }
+

@@ -38,13 +38,13 @@ export async function generateMetadata({ params }: BlogPageProps): Promise<Metad
   }
 
   if (!post) {
-    return { title: "Blog Post | betsetgo.xyz" }
+    return { title: "Stock Market Article | Stock247" }
   }
 
   const title = post.metaTitle || post.title
-  const description = post.metaDescription || post.excerpt || "Read our latest blog post on betsetgo.xyz."
-  const canonicalUrl = `https://betsetgo.xyz/blog/${post.slug}`
-  const bannerImage = post.featuredImage || "https://betsetgo.xyz/images/default-blog-banner.svg"
+  const description = post.metaDescription || post.excerpt || "Read our latest stock market and trading insights on Stock247."
+  const canonicalUrl = `https://stock-247.com/blog/${post.slug}`
+  const bannerImage = post.featuredImage || "https://stock-247.com/images/default-blog-banner.svg"
 
   return {
     title,
@@ -132,15 +132,15 @@ export default async function DynamicBlogPage({ params }: BlogPageProps) {
     "@type": "Article",
     headline: post.title,
     description: post.excerpt || post.metaDescription,
-    image: post.featuredImage || "https://betsetgo.xyz/images/default-blog-banner.svg",
+    image: post.featuredImage || "https://stock-247.com/images/default-blog-banner.svg",
     datePublished: post.createdAt.toISOString(),
     dateModified: post.updatedAt.toISOString(),
     publisher: {
       "@type": "Organization",
-      name: "betsetgo.xyz",
+      name: "Stock247",
       logo: {
         "@type": "ImageObject",
-        url: "https://betsetgo.xyz/rocky-logo.png",
+        url: "https://stock-247.com/icon.png",
       },
     },
   }
@@ -154,19 +154,19 @@ export default async function DynamicBlogPage({ params }: BlogPageProps) {
         "@type": "ListItem",
         position: 1,
         name: "Home",
-        item: "https://betsetgo.xyz",
+        item: "https://stock-247.com",
       },
       {
         "@type": "ListItem",
         position: 2,
-        name: "Blog",
-        item: "https://betsetgo.xyz/blog",
+        name: "Market Insights",
+        item: "https://stock-247.com/blog",
       },
       {
         "@type": "ListItem",
         position: 3,
         name: post.title,
-        item: `https://betsetgo.xyz/blog/${post.slug}`,
+        item: `https://stock-247.com/blog/${post.slug}`,
       },
     ],
   }

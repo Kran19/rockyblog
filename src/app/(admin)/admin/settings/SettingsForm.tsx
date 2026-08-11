@@ -35,13 +35,13 @@ export default function SettingsForm({ initialData }: { initialData: any }) {
       
       <div className="space-y-2">
         <Label htmlFor="siteName">Site Name</Label>
-        <Input id="siteName" name="siteName" required defaultValue={initialData?.siteName || "betsetgo.xyz"} />
+        <Input id="siteName" name="siteName" required defaultValue={initialData?.siteName || "stock-247.com"} />
         <p className="text-xs text-muted-foreground">The main name of your website.</p>
       </div>
       
       <div className="space-y-2">
         <Label htmlFor="seoTitle">Default SEO Title</Label>
-        <Input id="seoTitle" name="seoTitle" defaultValue={initialData?.seoTitle || ""} placeholder="e.g. betsetgo.xyz - Gaming News & Reviews" />
+        <Input id="seoTitle" name="seoTitle" defaultValue={initialData?.seoTitle || ""} placeholder="e.g. Stock247 - Real-Time Market Insights & Signals" />
       </div>
       
       <div className="space-y-2">

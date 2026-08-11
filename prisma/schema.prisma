@@ -207,7 +207,7 @@ model ContactMessage {
 
 model GlobalSettings {
   id              String   @id @default("global")
-  siteName        String   @default("betsetgo.xyz")
+  siteName        String   @default("stock-247.com")
   seoTitle        String?
   seoDescription  String?  @db.Text
   seoKeywords     String?

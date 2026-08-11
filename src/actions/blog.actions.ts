@@ -61,7 +61,7 @@ export async function updateBlogRedirectAction({
       postId,
       action: "UPDATE_REDIRECT_SETTINGS",
       userId: session.user.id,
-      userEmail: session.user.email || "admin@betsetgo.xyz",
+      userEmail: session.user.email || "admin@stock-247.com",
       oldValue: JSON.stringify({
         redirectEnabled: currentPost.redirectEnabled,
         redirectUrl: currentPost.redirectUrl,
@@ -105,7 +105,7 @@ export async function deleteAnalyticsAction({ postId }: { postId?: string }) {
       postId: postId || null,
       action: "DELETE_ANALYTICS",
       userId: session.user.id,
-      userEmail: session.user.email || "admin@betsetgo.xyz",
+      userEmail: session.user.email || "admin@stock-247.com",
       oldValue: "All visitor and click telemetry logs",
       newValue: "Purged",
     },

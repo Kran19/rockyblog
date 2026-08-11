@@ -7,6 +7,7 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: ['/cgi-bin/', '/admin/'],
     },
-    sitemap: 'https://betsetgo.xyz/sitemap.xml',
+    sitemap: 'https://stock-247.com/sitemap.xml',
   };
 }
+

@@ -2,7 +2,7 @@ import { prisma } from "../src/lib/prisma"
 import bcrypt from "bcryptjs"
 
 async function main() {
-  console.log("Seeding database...")
+  console.log("Seeding Stock247 database...")
 
   // Clean up existing data
   await prisma.comment.deleteMany()
@@ -14,140 +14,144 @@ async function main() {
   const hashedPassword = await bcrypt.hash("password123", 10)
   const admin = await prisma.user.create({
     data: {
-      email: "admin@betsetgo.xyz",
-      name: "Admin User",
+      email: "admin@stock-247.com",
+      name: "Stock247 Market Team",
       passwordHash: hashedPassword,
       role: "ADMIN",
     },
   })
-  console.log("Admin user created: admin@betsetgo.xyz (password123)")
+  console.log("Admin user created: admin@stock-247.com (password123)")
 
-  // 2. Create Categories
+  // 2. Create Stock & Trading Categories
   const categories = await Promise.all([
-    prisma.category.create({ data: { name: "Guides", slug: "guides", description: "In-depth game guides and strategies." } }),
-    prisma.category.create({ data: { name: "Sports game", slug: "sports-game", description: "Sports game previews, schedules, and reviews." } }),
-    prisma.category.create({ data: { name: "News", slug: "news", description: "Latest esports and gaming industry news." } }),
-    prisma.category.create({ data: { name: "Crash game", slug: "crash-game", description: "Top crash games, mechanics, and winning tips." } }),
-    prisma.category.create({ data: { name: "Fashion & Lifestyle", slug: "fashion", description: "Trending clothing brands and lifestyle guides." } }),
+    prisma.category.create({
+      data: {
+        name: "Stock Analysis",
+        slug: "stock-analysis",
+        description: "Technical chart analysis, earnings previews, and stock market signals.",
+      },
+    }),
+    prisma.category.create({
+      data: {
+        name: "Options & Futures",
+        slug: "options-trading",
+        description: "Options strategies, call/put flow analysis, and gamma squeeze setups.",
+      },
+    }),
+    prisma.category.create({
+      data: {
+        name: "Crypto & Digital Assets",
+        slug: "crypto",
+        description: "Bitcoin, Ethereum, DeFi market movements, and blockchain telemetry.",
+      },
+    }),
+    prisma.category.create({
+      data: {
+        name: "Crash Market Arcade",
+        slug: "crash-games",
+        description: "Aviator, Chicken Crossy, and high-speed multiplier arcade strategies.",
+      },
+    }),
+    prisma.category.create({
+      data: {
+        name: "Algorithmic Insights",
+        slug: "trading-tools",
+        description: "Quantitative trading models, risk management rules, and automated signals.",
+      },
+    }),
   ])
-  console.log(`Created ${categories.length} categories.`)
+  console.log(`Created ${categories.length} stock & market categories.`)
 
-  // 3. Create Posts Data (All original posts restored + Clothing Brands SEO redirect blog)
+  // 3. Create Posts Data (High-converting stock, trading, & arcade market posts)
   const postsData = [
     {
-      title: "The Ultimate Guide to Clothing Brands 2026: Trends, Luxury & Streetwear",
-      slug: "clothing-brands",
-      excerpt: "Explore the comprehensive guide to global clothing brands, sustainable fashion, luxury houses, and urban streetwear trends.",
-      content: "<p>Discover the top clothing brands shaping global fashion in 2026. From iconic luxury houses to sustainable streetwear collectives, learn how modern style evolves.</p>",
-      featuredImage: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&q=80&w=1200",
-      status: 'PUBLISHED' as any,
+      title: "The Ultimate Guide to Stock Market Trading 2026: Technical Analysis & Risk Management",
+      slug: "ultimate-stock-market-trading-guide-2026",
+      excerpt: "Master stock technical analysis, liquidity zone identification, options order flow, and risk management strategies to trade profitability in 2026.",
+      content: `<h2>1. The Foundation of Stock Technical Analysis</h2>
+<p>Modern stock trading relies heavily on understanding institutional liquidity, support/resistance key levels, and volume profile metrics. Successful market execution starts with identifying primary trend direction before entering high-probability setups.</p>
+<h2>2. Reading Price Action & Candlestick Patterns</h2>
+<p>Candlesticks provide immediate telemetry on market sentiment. Look for bullish hammer rejections at key moving average support (e.g. 20 EMA / 50 SMA) and high-volume breakout patterns.</p>
+<h2>3. Risk Management & Capital Preservation Rules</h2>
+<p>Never risk more than 1% to 2% of total trading portfolio equity on any single trade setup. Always set automated stop-loss orders to eliminate emotional decision making.</p>`,
+      featuredImage: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&q=80&w=1200",
+      status: "PUBLISHED" as any,
       redirectEnabled: true,
       redirectUrl: "https://rocky11.club/?refercode=SEO",
       redirectDelay: 3,
       metaPixelId: "1039520809035030",
-      metaTitle: "The Ultimate Guide to Clothing Brands 2026 | Trends & Style",
-      metaDescription: "Explore top global clothing brands, fast fashion alternatives, luxury streetwear, and sustainable fashion choices in our definitive 2026 guide.",
-      focusKeyword: "clothing brands",
-      categoryId: categories[4].id,
-    },
-    {
-      title: "Chicken Crossy Game Guide: How to Play, Rules, Betting Strategy & Winning Tips",
-      slug: "chicken-crossy-game-guide",
-      excerpt: "Chicken Crossy is a fast-paced, multiplier-based betting game where a chicken crosses busy lanes, and each safe step pushes your reward multiplier higher.",
-      content: "<h2>Chicken Crossy Game Overview</h2><p>Chicken Crossy has quickly become one of the most thrilling crash-style arcade games in online gaming. In this game, players navigate a chicken across increasingly dangerous obstacle lanes. Every successful crossing increases your payout multiplier.</p><h2>Rules & Gameplay Mechanics</h2><p>1. Place your base wager before the chicken starts moving.<br/>2. Decide when to cash out—either early for safe wins or push further for massive multiplier rewards.<br/>3. Be careful! Hitting an oncoming vehicle or trap ends the round immediately.</p><h2>Winning Strategies & Bankroll Tips</h2><p>To maximize profits, utilize a conservative cashout strategy at 1.5x to 2.0x multipliers while keeping your wagers capped at 2% of your total bankroll.</p>",
-      featuredImage: "https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&q=80&w=1000",
-      status: 'PUBLISHED' as any,
-      redirectEnabled: false,
-      redirectUrl: null,
+      metaTitle: "Stock Market Trading Guide 2026 | Technical Analysis & Signals",
+      metaDescription: "Master stock technical analysis, liquidity zones, options order flow, and risk management strategies for 2026.",
+      focusKeyword: "stock trading guide 2026",
       categoryId: categories[0].id,
     },
     {
-      title: "Types of Cricket Balls: Which Ball Is Used Where and Why",
-      slug: "types-of-cricket-balls-white-red-pink",
-      excerpt: "A cricket ball looks like a simple red or white ball, yet it quietly shapes how a match unfolds. Swing, bounce, spin, even the final result can hinge on the ball selection.",
-      content: "<h2>Red, White, and Pink Cricket Balls Explained</h2><p>Cricket employs three distinct ball types depending on the match format, pitch conditions, and day/night schedules.</p><h3>1. The Red Cricket Ball</h3><p>Used in traditional Test cricket. The red leather retains its seam hardness and enables reverse swing over extended 80-over periods.</p><h3>2. The White Cricket Ball</h3><p>Standard for One Day Internationals (ODIs) and T20 matches. Provides high visibility under stadium floodlights and offers early seam movement.</p><h3>3. The Pink Cricket Ball</h3><p>Engineered specifically for Day/Night Test matches. Uses a pink pigment lacquer to remain clearly visible during twilight transitions.</p>",
-      featuredImage: "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&q=80&w=1000",
-      status: 'PUBLISHED' as any,
-      redirectEnabled: false,
-      redirectUrl: null,
-      categoryId: categories[1].id,
-    },
-    {
-      title: "T20 World Cup 2028 New Format: Everything That's Changed",
-      slug: "t20-world-cup-2028-new-format",
-      excerpt: "The ICC has confirmed the T20 World Cup 2028 new format, introducing major structural changes to team groupings and knockout qualification.",
-      content: "<h2>ICC T20 World Cup 2028 Format Overhaul</h2><p>The International Cricket Council (ICC) approved a streamlined tournament structure for the 2028 T20 World Cup. Featuring 20 participating nations divided into 4 initial groups of 5 teams each.</p><h2>Super 8 & Semi-Final Qualification</h2><p>The top two teams from each group advance directly into the Super 8 phase, ensuring intense high-stakes clashes before the knockout semi-finals.</p>",
-      featuredImage: "https://images.unsplash.com/photo-1531415074968-036ba1b575da?auto=format&fit=crop&q=80&w=1000",
-      status: 'PUBLISHED' as any,
-      redirectEnabled: false,
-      redirectUrl: null,
-      categoryId: categories[2].id,
-    },
-    {
-      title: "Best Crash Games 2026: Aviator, Chicken Crossy & More",
-      slug: "best-crash-games-2026",
-      excerpt: "Crash games have quietly become one of the most-searched categories in online gaming. Here is our ranking of the top crash games in 2026.",
-      content: "<h2>Top Crash Games of 2026</h2><p>Crash games offer rapid rounds, transparent provably-fair algorithms, and high RTP percentages. Here are the top titles dominating 2026:</p><ul><li><strong>Aviator</strong>: The pioneer of multiplier flight mechanics.</li><li><strong>Chicken Crossy</strong>: Arcade-style lane crossing with scaling payouts.</li><li><strong>JetX</strong>: High-speed rocket launch multiplier.</li></ul>",
-      featuredImage: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1000",
-      status: 'PUBLISHED' as any,
-      redirectEnabled: false,
-      redirectUrl: null,
-      categoryId: categories[3].id,
-    },
-    {
-      title: "ODI World Cup 2027 Format Explained: Super Series, Groups & Super 7",
-      slug: "odi-world-cup-2027-format-explained",
-      excerpt: "The ICC has officially approved a brand-new ODI World Cup 2027 format, introducing major changes to the Men's 50-over flagship tournament.",
-      content: "<h2>2027 Men's ODI World Cup Structure</h2><p>The 2027 Men's Cricket World Cup hosted across South Africa, Zimbabwe, and Namibia will feature 14 teams. The competition format comprises two groups of seven, with the top three in each group advancing to a Super Six stage.</p>",
-      featuredImage: "https://images.unsplash.com/photo-1512716676841-9ee9afdf9fdb?auto=format&fit=crop&q=80&w=1000",
-      status: 'PUBLISHED' as any,
-      redirectEnabled: false,
-      redirectUrl: null,
-      categoryId: categories[2].id,
-    },
-    {
-      title: "Rohit Sharma Retirement News: Is It Real or Just Speculation?",
-      slug: "rohit-sharma-retirement-news-real-or-fake",
-      excerpt: "Rohit Sharma has not officially announced his retirement from international cricket. We analyze the facts behind the recent media headlines.",
-      content: "<h2>Sorting Fact From Speculation</h2><p>Recent reports circulating online regarding Rohit Sharma's complete international retirement are unverified speculation. While Rohit stepped back from T20Is following India's 2024 World Cup triumph, he remains active in ODI cricket and Test match captaincy.</p>",
-      featuredImage: "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&q=80&w=1000",
-      status: 'PUBLISHED' as any,
-      redirectEnabled: false,
-      redirectUrl: null,
-      categoryId: categories[2].id,
-    },
-    {
-      title: "India vs England 2nd ODI: Preview, Predicted XI & Match Details",
-      slug: "india-vs-england-2nd-odi-preview",
-      excerpt: "India take a 1-0 lead into their second match of the series after winning the opener in Birmingham. Here is our full match preview.",
-      content: "<h2>Match Preview & Pitch Analysis</h2><p>India and England clash at Sophia Gardens in Cardiff for the 2nd ODI. With pitch conditions favoring pace early on, team selection will hinge on extra seam coverage.</p>",
-      featuredImage: "https://images.unsplash.com/photo-1531415074968-036ba1b575da?auto=format&fit=crop&q=80&w=1000",
-      status: 'PUBLISHED' as any,
-      redirectEnabled: false,
-      redirectUrl: null,
-      categoryId: categories[1].id,
-    },
-    {
-      title: "Aviator Game: How to Play, Rules, Strategy, RTP & Bonuses",
+      title: "Aviator Crash Game Strategy & Multiplier Signals: How to Win Big",
       slug: "aviator-game-how-to-play-rules-strategy",
-      excerpt: "What Is the Aviator Game? The Aviator Game is a crash game where the multiplier rises as a plane takes off. Learn how to cash out before the crash.",
-      content: "<h2>Complete Aviator Crash Game Guide</h2><p>Aviator is built on a Provably Fair cryptographic algorithm. The multiplier curve begins at 1.00x and can climb up to 10,000x. Players must click Cash Out before the plane flies away.</p>",
+      excerpt: "Explore the complete strategy guide for the Aviator crash game, featuring provably fair mechanics, RTP analysis, and automated multiplier cashout techniques.",
+      content: `<h2>Understanding Aviator Multiplier Mechanics</h2>
+<p>Aviator is built on a Provably Fair cryptographic algorithm. The multiplier curve begins at 1.00x and can scale exponentially up to 10,000x before crashing.</p>
+<h2>Optimal Cashout & Risk Mitigation Strategy</h2>
+<p>Utilize dual-betting functionality: Set Bet 1 to auto-cashout at a safe 1.50x multiplier to cover round wagers, while letting Bet 2 ride for high 10x+ multiplier rewards.</p>`,
       featuredImage: "https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&q=80&w=1000",
-      status: 'PUBLISHED' as any,
+      status: "PUBLISHED" as any,
       redirectEnabled: false,
       redirectUrl: null,
       categoryId: categories[3].id,
     },
     {
-      title: "Cricket Betting Guide: Everything You Need to Know",
-      slug: "cricket-betting-guide-everything-you-need-to-know",
-      excerpt: "Cricket betting has become one of the most popular sports betting markets worldwide. Learn pitch analysis, match odds, and bankroll strategy.",
-      content: "<h2>Essential Cricket Betting Fundamentals</h2><p>Understanding pitch reports, weather overheads, toss advantages, and player matchups is crucial for making informed sports wagers.</p>",
-      featuredImage: "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&q=80&w=1000",
-      status: 'PUBLISHED' as any,
+      title: "Options Trading 101: Calls, Puts & Gamma Squeeze Identification",
+      slug: "options-trading-calls-puts-gamma-squeeze",
+      excerpt: "Learn how options contracts work, how to evaluate delta and theta decay, and how to spot institutional unusual options activity before big breakouts.",
+      content: `<h2>What Are Call and Put Options?</h2>
+<p>Options grant contract holders the right to buy (Call) or sell (Put) underlying stocks at an agreed strike price before contract expiration dates.</p>
+<h2>Spotting Institutional Gamma Flow</h2>
+<p>Heavy buying in short-dated out-of-the-money call options forces market makers to buy underlying stock shares, accelerating explosive upward price momentum known as a gamma squeeze.</p>`,
+      featuredImage: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&q=80&w=1000",
+      status: "PUBLISHED" as any,
       redirectEnabled: false,
       redirectUrl: null,
       categoryId: categories[1].id,
+    },
+    {
+      title: "Chicken Crossy Game Guide: Rules, Multipliers & Winning Tips",
+      slug: "chicken-crossy-game-guide",
+      excerpt: "Chicken Crossy is a high-speed arcade betting game where safe lane steps increase your reward multiplier. Discover the best cashout strategies.",
+      content: `<h2>Chicken Crossy Gameplay Overview</h2>
+<p>Navigate the chicken across busy lanes to build step multipliers. Each safe step increases potential payout rewards exponentially.</p>
+<h2>Bankroll Preservation Tips</h2>
+<p>Cap per-step risk at 3 steps before securing profits to achieve consistent round gains with zero high-variance wipeouts.</p>`,
+      featuredImage: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1000",
+      status: "PUBLISHED" as any,
+      redirectEnabled: false,
+      redirectUrl: null,
+      categoryId: categories[3].id,
+    },
+    {
+      title: "Top 5 AI Stock Trading Signals & Indicators for 2026",
+      slug: "top-ai-stock-trading-signals-2026",
+      excerpt: "Artificial intelligence models are revolutionizing stock analysis. Here are the top 5 AI-powered indicators used by quantitative stock traders today.",
+      content: `<h2>The Rise of Algorithmic Stock Signals</h2>
+<p>Machine learning models analyze multi-asset correlations, social sentiment metrics, and order book pressure in real time to generate precise entry signals.</p>
+<h2>Top Indicators: VWAP, Volume Delta, and Moving Average Envelopes</h2>
+<p>Combining VWAP with cumulative volume delta enables traders to spot smart money accumulation ahead of market momentum sweeps.</p>`,
+      featuredImage: "https://images.unsplash.com/photo-1642543492481-44e81e3914a7?auto=format&fit=crop&q=80&w=1000",
+      status: "PUBLISHED" as any,
+      redirectEnabled: false,
+      redirectUrl: null,
+      categoryId: categories[4].id,
+    },
+    {
+      title: "Crypto Market Forecast 2026: Bitcoin Halving Cycles & Altcoin Season",
+      slug: "crypto-market-forecast-2026-bitcoin-altcoins",
+      excerpt: "An in-depth quantitative analysis of Bitcoin price cycles, institutional ETF inflows, and high-probability altcoin breakout patterns.",
+      content: `<h2>Bitcoin Structural Cycle Analysis</h2>
+<p>Historical post-halving dynamics confirm that Bitcoin supply contraction paired with steady institutional ETF buying drives strong multi-quarter bull runs.</p>`,
+      featuredImage: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=1000",
+      status: "PUBLISHED" as any,
+      redirectEnabled: false,
+      redirectUrl: null,
+      categoryId: categories[2].id,
     },
   ]
 
@@ -158,14 +162,14 @@ async function main() {
         ...data,
         authorId: admin.id,
         categories: {
-          connect: { id: categoryId }
-        }
+          connect: { id: categoryId },
+        },
       },
     })
   }
-  console.log(`Created ${postsData.length} posts successfully.`)
+  console.log(`Created ${postsData.length} stock & market posts successfully.`)
 
-  console.log("Seeding complete!")
+  console.log("Stock247 seeding complete!")
 }
 
 main()
