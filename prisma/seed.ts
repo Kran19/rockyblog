@@ -1,5 +1,4 @@
 import { PrismaClient } from "@prisma/client"
-import bcrypt from "bcryptjs"
 
 const prisma = new PrismaClient()
 
@@ -13,7 +12,14 @@ async function main() {
   await prisma.user.deleteMany()
 
   // 1. Create Admin User
-  const hashedPassword = await bcrypt.hash("password123", 10)
+  let hashedPassword = "$2b$10$i3fWQPFZrc0ZwPeXBya1o.gc..9/We72tQmTXFBTCP9P5se61Gr7a" // hash for password123
+  try {
+    const bcrypt = require("bcryptjs")
+    hashedPassword = await bcrypt.hash("password123", 10)
+  } catch {
+    console.log("Using pre-hashed fallback for admin password.")
+  }
+
   const admin = await prisma.user.create({
     data: {
       email: "admin@stock-247.com",
