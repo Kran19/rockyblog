@@ -7,7 +7,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-betsetgo_password}
       POSTGRES_DB: betsetgo_db
     ports:
-      - "5433:5432"
+      - "${DB_PORT:-5434}:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
     networks:
@@ -19,13 +19,13 @@ services:
       dockerfile: Dockerfile
     restart: always
     ports:
-      - "127.0.0.1:3000:3000"
+      - "127.0.0.1:${APP_PORT:-3001}:3000"
     env_file:
       - .env
     environment:
       - DATABASE_URL=postgresql://betsetgo_user:${POSTGRES_PASSWORD:-betsetgo_password}@db:5432/betsetgo_db?schema=public
-      - NEXTAUTH_URL=${NEXTAUTH_URL:-http://localhost:3000}
-      - AUTH_URL=${NEXTAUTH_URL:-http://localhost:3000}
+      - NEXTAUTH_URL=${NEXTAUTH_URL:-http://localhost:3001}
+      - AUTH_URL=${NEXTAUTH_URL:-http://localhost:3001}
       - AUTH_SECRET=${AUTH_SECRET:-your-super-secret-key-change-in-production}
       - AUTH_TRUST_HOST=true
     depends_on:
@@ -42,3 +42,4 @@ networks:
 volumes:
   db_data:
   uploads_data:
+
