@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
+import { MetaPixel } from "@/components/analytics/MetaPixel";
 
 const outfit = Outfit({
   variable: "--font-sans",
@@ -45,6 +46,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning className={`${outfit.variable} antialiased`}>
       <body className={`${outfit.className} min-h-screen flex flex-col bg-background font-sans`}>
         <GoogleAnalytics />
+        <MetaPixel />
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

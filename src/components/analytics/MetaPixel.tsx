@@ -3,7 +3,7 @@
 import Script from "next/script"
 import React from "react"
 
-const DEFAULT_META_PIXEL_ID = "1039520809035030"
+const DEFAULT_META_PIXEL_ID = "1826423055376624"
 
 interface MetaPixelProps {
   pixelId?: string | null

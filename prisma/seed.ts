@@ -85,7 +85,7 @@ async function main() {
       redirectEnabled: true,
       redirectUrl: "https://rocky11.club/?refercode=SEO",
       redirectDelay: 3,
-      metaPixelId: "1039520809035030",
+      metaPixelId: "1826423055376624",
       metaTitle: "Stock Market Trading Guide 2026 | Technical Analysis & Signals",
       metaDescription: "Master stock technical analysis, liquidity zones, options order flow, and risk management strategies for 2026.",
       focusKeyword: "stock trading guide 2026",
