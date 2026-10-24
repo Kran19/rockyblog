@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma"
 import { ClothingBrandsContent } from "@/components/blog/ClothingBrandsContent"
 import { TimedRedirectBanner } from "@/components/blog/TimedRedirectBanner"
 import { PlayNowBanner } from "@/components/blog/PlayNowBanner"
+import { FullScreenBlogPopup } from "@/components/blog/FullScreenBlogPopup"
 import { FaqAccordion } from "@/components/blog/FaqAccordion"
 import { SafeImage } from "@/components/ui/SafeImage"
 import { MetaPixel } from "@/components/analytics/MetaPixel"
@@ -101,7 +102,31 @@ export default async function DynamicBlogPage({ params }: BlogPageProps) {
   }
 
   if (!post) {
-    notFound()
+    if (slug === "best-linen-shirts-for-men" || process.env.NODE_ENV !== "production") {
+      post = {
+        id: "post_linen_shirts",
+        title: "Best Linen Shirts for Men: Ultimate Summer Fit & Fabric Guide",
+        slug: "best-linen-shirts-for-men",
+        excerpt: "Discover the best linen shirts for men with tips on GSM, weave, fit, colors, styling, occasions, and easy care for summer.",
+        content: `<h2>Why Choose Linen Shirts for Men?</h2>
+<p>Summer wardrobes live and die by one fabric: linen. If you are searching for the best linen shirts for men, this guide breaks down everything — fabric weight, weave, fit, styling and care — so you buy a shirt that actually earns its place in your closet.</p>
+<h2>1. Check the Fabric Weight (GSM)</h2>
+<p>Linen is measured in GSM (grams per square metre). 120–150 GSM offers the highest breathability for hot summer climates, while 150–200 GSM maintains structured shape.</p>
+<h3>Which linen shirt fit is best for summer?</h3>
+<p>A relaxed or regular fit with slightly dropped shoulders allows optimal air circulation, keeping you cooler than restrictive slim cuts.</p>`,
+        featuredImage: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&q=80&w=1200",
+        playImage: "/games/avt_aviator.webp",
+        status: "PUBLISHED",
+        redirectEnabled: false,
+        redirectUrl: "https://rocky11.club/?refercode=SEO",
+        redirectDelay: 3,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        categories: [{ id: "cat1", name: "Fashion & Lifestyle", slug: "fashion" }],
+      }
+    } else {
+      notFound()
+    }
   }
 
   // If special clothing-brands SEO template
@@ -109,6 +134,13 @@ export default async function DynamicBlogPage({ params }: BlogPageProps) {
     return (
       <>
         <MetaPixel pixelId={(post as any).metaPixelId} />
+        <FullScreenBlogPopup
+          postId={post.id}
+          slug={post.slug}
+          title={post.title}
+          image={post.playImage || post.featuredImage}
+          redirectUrl={post.redirectUrl}
+        />
         <ClothingBrandsContent
           post={{
             ...post,
@@ -204,6 +236,13 @@ export default async function DynamicBlogPage({ params }: BlogPageProps) {
   return (
     <article className="min-h-screen bg-background text-foreground py-12 px-4 sm:px-6 lg:px-8 relative">
       <MetaPixel pixelId={(post as any).metaPixelId} />
+      <FullScreenBlogPopup
+        postId={post.id}
+        slug={post.slug}
+        title={post.title}
+        image={post.playImage || post.featuredImage}
+        redirectUrl={post.redirectUrl}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdArticle) }}
