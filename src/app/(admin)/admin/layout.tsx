@@ -1,6 +1,6 @@
 import { ReactNode } from "react"
 import Link from "next/link"
-import { FileText, LayoutDashboard, Tags, Users, Settings, User, LogOut, Image as ImageIcon, BarChart2, ShieldCheck } from "lucide-react"
+import { FileText, LayoutDashboard, Tags, Users, Settings, User, LogOut, Image as ImageIcon, BarChart2, ShieldCheck, MousePointerClick } from "lucide-react"
 import { auth, signOut } from "@/lib/auth"
 import { redirect } from "next/navigation"
 import { ThemeToggle } from "@/components/theme-toggle"
@@ -35,6 +35,10 @@ export default async function AdminLayout({ children }: { children: ReactNode })
             <Link href="/admin/analytics" className="flex items-center gap-3 rounded-lg px-4 py-2 hover:bg-accent text-sm font-medium transition-colors text-sky-400">
               <BarChart2 className="h-4 w-4" />
               Analytics & Realtime
+            </Link>
+            <Link href="/admin/popup-clicks" className="flex items-center gap-3 rounded-lg px-4 py-2 hover:bg-accent text-sm font-medium transition-colors text-amber-400">
+              <MousePointerClick className="h-4 w-4" />
+              Popup Clicks & Flow
             </Link>
             <Link href="/admin/posts" className="flex items-center gap-3 rounded-lg px-4 py-2 hover:bg-accent text-sm font-medium transition-colors">
               <FileText className="h-4 w-4" />
@@ -88,6 +92,10 @@ export default async function AdminLayout({ children }: { children: ReactNode })
         <Link href="/admin" className="flex flex-col items-center gap-1 p-2 text-muted-foreground hover:text-primary transition-colors">
           <LayoutDashboard className="h-5 w-5" />
           <span className="text-[10px] font-medium">Overview</span>
+        </Link>
+        <Link href="/admin/popup-clicks" className="flex flex-col items-center gap-1 p-2 text-amber-400 hover:text-amber-300 transition-colors">
+          <MousePointerClick className="h-5 w-5" />
+          <span className="text-[10px] font-medium">Popups</span>
         </Link>
         <Link href="/admin/posts" className="flex flex-col items-center gap-1 p-2 text-muted-foreground hover:text-primary transition-colors">
           <FileText className="h-5 w-5" />

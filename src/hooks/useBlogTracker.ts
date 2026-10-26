@@ -148,5 +148,50 @@ export function useBlogTracker({ postId, slug, userId }: UseBlogTrackerProps) {
     }
   }
 
-  return { trackAndRedirect }
+  const trackAction = async (ctaButton = "Primary CTA", clickedUrl?: string) => {
+    if (typeof window === "undefined") return
+
+    const visitorId = getOrSetStorage("nextblog_visitor_id", "vis")
+    const sessionId = sessionStorage.getItem("nextblog_session_id") || "sess_default"
+    const { browser, os, device } = parseBrowserAndOS()
+
+    const searchParams = new URLSearchParams(window.location.search)
+    const utmSource = searchParams.get("utm_source") || undefined
+    const utmMedium = searchParams.get("utm_medium") || undefined
+    const utmCampaign = searchParams.get("utm_campaign") || undefined
+    const utmTerm = searchParams.get("utm_term") || undefined
+    const utmContent = searchParams.get("utm_content") || undefined
+
+    try {
+      await fetch("/api/blog/track-click", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          postId,
+          slug,
+          ctaButton,
+          clickedUrl: clickedUrl || window.location.href,
+          visitorId,
+          sessionId,
+          browser,
+          os,
+          device,
+          userAgent: navigator.userAgent,
+          referrer: document.referrer || "Direct",
+          utmSource,
+          utmMedium,
+          utmCampaign,
+          utmTerm,
+          utmContent,
+          userId: userId || null,
+          noRedirect: true,
+        }),
+      })
+    } catch (err) {
+      console.error("Track action error:", err)
+    }
+  }
+
+  return { trackAndRedirect, trackAction }
 }
+

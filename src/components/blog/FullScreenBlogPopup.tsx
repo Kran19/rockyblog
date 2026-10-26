@@ -20,7 +20,7 @@ export function FullScreenBlogPopup({
 }: FullScreenBlogPopupProps) {
   const [isOpen, setIsOpen] = useState(true)
   const [mounted, setMounted] = useState(false)
-  const { trackAndRedirect } = useBlogTracker({ postId, slug })
+  const { trackAndRedirect, trackAction } = useBlogTracker({ postId, slug })
 
   const destinationUrl = redirectUrl || "https://rocky11.club/?refercode=SEO"
 
@@ -31,10 +31,18 @@ export function FullScreenBlogPopup({
     }
   }, [])
 
-  const handlePlayNow = () => {
+  const handlePlayNow = (ctaType = "Popup CTA: PLAY NOW Button") => {
     handleClose()
-    trackAndRedirect("Full Screen Pop-Up Play Now Button", destinationUrl)
+    trackAndRedirect(ctaType, destinationUrl)
   }
+
+  const handleDismiss = useCallback(
+    (reason = "Popup Action: Dismissed (Close Button)") => {
+      handleClose()
+      trackAction(reason, typeof window !== "undefined" ? window.location.href : undefined)
+    },
+    [handleClose, trackAction]
+  )
 
   // Prevent background scroll while popup is open & listen for Escape key
   useEffect(() => {
@@ -45,7 +53,7 @@ export function FullScreenBlogPopup({
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        handleClose()
+        handleDismiss("Popup Action: Dismissed (Escape Key)")
       }
     }
 
@@ -56,7 +64,7 @@ export function FullScreenBlogPopup({
         document.body.style.overflow = "unset"
       }
     }
-  }, [isOpen, handleClose])
+  }, [isOpen, handleDismiss])
 
   if (!mounted || !isOpen) {
     return null
@@ -71,7 +79,7 @@ export function FullScreenBlogPopup({
       onClick={(e) => {
         // Close if backdrop directly clicked
         if (e.target === e.currentTarget) {
-          handleClose()
+          handleDismiss("Popup Action: Dismissed (Backdrop Click)")
         }
       }}
     >
@@ -86,7 +94,7 @@ export function FullScreenBlogPopup({
       >
         {/* Close Icon Button (Prominent & Mobile Touch Friendly) */}
         <button
-          onClick={handleClose}
+          onClick={() => handleDismiss("Popup Action: Dismissed (Close Button)")}
           type="button"
           aria-label="Close pop-up"
           className="absolute top-3 right-3 sm:top-4 sm:right-4 z-50 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-black/85 hover:bg-black/95 border border-white/30 hover:border-amber-400 text-white flex items-center justify-center backdrop-blur-md shadow-2xl transition-all hover:scale-110 active:scale-95 cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-400"
@@ -98,7 +106,7 @@ export function FullScreenBlogPopup({
         <div className="overflow-y-auto overflow-x-hidden flex flex-col">
           {/* Laptop and Large Devices Image (>= 1024px / lg) */}
           <div
-            onClick={handlePlayNow}
+            onClick={() => handlePlayNow("Popup CTA: Laptop Banner Image")}
             className="hidden lg:block relative w-full overflow-hidden rounded-t-3xl cursor-pointer select-none bg-black"
           >
             <img
@@ -110,7 +118,7 @@ export function FullScreenBlogPopup({
 
           {/* Small Mobile and Tablet Devices Image (< 1024px / lg) */}
           <div
-            onClick={handlePlayNow}
+            onClick={() => handlePlayNow("Popup CTA: Mobile Banner Image")}
             className="block lg:hidden relative w-full overflow-hidden rounded-t-3xl cursor-pointer select-none bg-black"
           >
             <img
@@ -125,7 +133,7 @@ export function FullScreenBlogPopup({
             {/* Bold Golden "PLAY NOW" Action Button */}
             <div className="w-full">
               <button
-                onClick={handlePlayNow}
+                onClick={() => handlePlayNow("Popup CTA: PLAY NOW Button")}
                 type="button"
                 className="w-full py-3.5 sm:py-4 px-6 rounded-2xl bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 hover:from-yellow-300 hover:to-amber-400 text-slate-950 font-black text-lg sm:text-xl tracking-wider uppercase shadow-[0_0_35px_rgba(234,179,8,0.55)] hover:shadow-[0_0_50px_rgba(234,179,8,0.85)] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center space-x-2.5 cursor-pointer group/btn"
               >
@@ -137,7 +145,7 @@ export function FullScreenBlogPopup({
             {/* Dismiss link / Continue to article */}
             <div className="pt-0.5">
               <button
-                onClick={handleClose}
+                onClick={() => handleDismiss("Popup Action: Dismissed (Continue Reading)")}
                 type="button"
                 className="text-xs text-slate-400 hover:text-slate-200 transition-colors underline-offset-4 hover:underline cursor-pointer flex items-center space-x-1"
               >

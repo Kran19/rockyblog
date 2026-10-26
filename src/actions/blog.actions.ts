@@ -114,3 +114,45 @@ export async function deleteAnalyticsAction({ postId }: { postId?: string }) {
   revalidatePath("/admin/analytics")
   return { success: true }
 }
+
+export async function deletePopupClicksAction({ postId }: { postId?: string }) {
+  const session = await auth()
+  if (!session?.user || session.user.role !== "ADMIN") {
+    throw new Error("Unauthorized: Only Super Admin can delete popup telemetry.")
+  }
+
+  const popupFilter = {
+    OR: [
+      { ctaButton: { contains: "Pop-Up", mode: "insensitive" as const } },
+      { ctaButton: { contains: "Popup", mode: "insensitive" as const } },
+    ],
+  }
+
+  if (postId) {
+    await prisma.blogClick.deleteMany({
+      where: {
+        postId,
+        ...popupFilter,
+      },
+    })
+  } else {
+    await prisma.blogClick.deleteMany({
+      where: popupFilter,
+    })
+  }
+
+  await prisma.blogAuditLog.create({
+    data: {
+      postId: postId || null,
+      action: "DELETE_POPUP_CLICKS",
+      userId: session.user.id,
+      userEmail: session.user.email || "admin@stock-247.com",
+      oldValue: "Popup click telemetry logs",
+      newValue: "Purged",
+    },
+  })
+
+  revalidatePath("/admin/popup-clicks")
+  revalidatePath("/admin/analytics")
+  return { success: true }
+}

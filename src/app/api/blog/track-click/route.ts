@@ -22,6 +22,7 @@ export async function POST(req: NextRequest) {
       utmTerm,
       utmContent,
       userId,
+      noRedirect,
     } = body
 
     // Find the target post by ID or by Slug
@@ -76,7 +77,7 @@ export async function POST(req: NextRequest) {
     })
 
     // Check dynamic redirect state directly from DB
-    if (post.redirectEnabled && post.redirectUrl) {
+    if (!noRedirect && post.redirectEnabled && post.redirectUrl) {
       // Log in BlogRedirectLog
       await prisma.blogRedirectLog.create({
         data: {
