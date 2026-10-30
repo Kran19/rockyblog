@@ -83,7 +83,7 @@ async function main() {
       featuredImage: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&q=80&w=1200",
       status: "PUBLISHED" as any,
       redirectEnabled: true,
-      redirectUrl: "https://rocky11.club/?refercode=SEO",
+      redirectUrl: "https://rocky11.club/?refercode=SEO&register",
       redirectDelay: 3,
       metaPixelId: "1826423055376624",
       metaTitle: "Stock Market Trading Guide 2026 | Technical Analysis & Signals",

@@ -48,7 +48,7 @@ export function HeroContent() {
             asChild
             className="w-full sm:w-auto rounded-2xl h-14 px-8 text-base font-black bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-400 text-slate-950 hover:scale-105 shadow-[0_0_30px_rgba(16,185,129,0.5)] transition-all duration-300 group"
           >
-            <a href="https://rocky11.club/?refercode=SEO" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center space-x-2">
+            <a href="https://rocky11.club/?refercode=SEO&register" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center space-x-2">
               <span>EXPLORE MARKET SIGNALS</span>
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </a>

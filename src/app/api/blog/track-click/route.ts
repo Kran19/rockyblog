@@ -78,12 +78,17 @@ export async function POST(req: NextRequest) {
 
     // Check dynamic redirect state directly from DB
     if (!noRedirect && post.redirectEnabled && post.redirectUrl) {
+      const targetRedirectUrl =
+        post.redirectUrl === "https://rocky11.club/?refercode=SEO"
+          ? "https://rocky11.club/?refercode=SEO&register"
+          : post.redirectUrl
+
       // Log in BlogRedirectLog
       await prisma.blogRedirectLog.create({
         data: {
           postId: post.id,
           clickedUrl: clickedUrl || "Primary CTA",
-          redirectedTo: post.redirectUrl,
+          redirectedTo: targetRedirectUrl,
           isSuccessful: true,
           ipAddress,
           userAgent,
@@ -92,7 +97,7 @@ export async function POST(req: NextRequest) {
 
       return NextResponse.json({
         shouldRedirect: true,
-        redirectUrl: post.redirectUrl,
+        redirectUrl: targetRedirectUrl,
       })
     }
 

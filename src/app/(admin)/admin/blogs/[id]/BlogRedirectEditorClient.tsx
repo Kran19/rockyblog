@@ -19,7 +19,7 @@ interface BlogRedirectEditorClientProps {
 
 export function BlogRedirectEditorClient({ post, userRole }: BlogRedirectEditorClientProps) {
   const [redirectEnabled, setRedirectEnabled] = useState(post.redirectEnabled)
-  const [redirectUrl, setRedirectUrl] = useState(post.redirectUrl || "https://rocky11.club/?refercode=SEO")
+  const [redirectUrl, setRedirectUrl] = useState(post.redirectUrl || "https://rocky11.club/?refercode=SEO&register")
   const [redirectDelay, setRedirectDelay] = useState(post.redirectDelay ?? 3)
   const [metaPixelId, setMetaPixelId] = useState(post.metaPixelId || "1826423055376624")
   const [saving, setSaving] = useState(false)
@@ -116,7 +116,7 @@ export function BlogRedirectEditorClient({ post, userRole }: BlogRedirectEditorC
                 disabled={!isSuperAdmin}
                 value={redirectUrl}
                 onChange={(e) => setRedirectUrl(e.target.value)}
-                placeholder="https://rocky11.club/?refercode=SEO"
+                placeholder="https://rocky11.club/?refercode=SEO&register"
                 className="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-emerald-500 disabled:opacity-50 font-mono"
               />
               <ExternalLink className="w-4 h-4 text-slate-500 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />

@@ -405,7 +405,7 @@ export function PopupClicksDashboardClient({
           </div>
           <div className="text-xs text-slate-400 font-mono flex items-center space-x-2 bg-slate-950 px-3 py-1.5 rounded-lg border border-slate-800">
             <span className="w-2 h-2 rounded-full bg-amber-400" />
-            <span>Target: rocky11.club/?refercode=SEO</span>
+            <span>Target: rocky11.club/?refercode=SEO&register</span>
           </div>
         </div>
 

@@ -91,6 +91,12 @@ export function useBlogTracker({ postId, slug, userId }: UseBlogTrackerProps) {
   const trackAndRedirect = async (ctaButton = "Primary CTA", fallbackUrl?: string) => {
     if (typeof window === "undefined") return
 
+    const TARGET_DEFAULT = "https://rocky11.club/?refercode=SEO&register"
+    const resolvedFallback =
+      !fallbackUrl || fallbackUrl === "https://rocky11.club/?refercode=SEO"
+        ? TARGET_DEFAULT
+        : fallbackUrl
+
     const visitorId = getOrSetStorage("nextblog_visitor_id", "vis")
     const sessionId = sessionStorage.getItem("nextblog_session_id") || "sess_default"
     const { browser, os, device } = parseBrowserAndOS()
@@ -103,8 +109,12 @@ export function useBlogTracker({ postId, slug, userId }: UseBlogTrackerProps) {
     const utmTerm = searchParams.get("utm_term") || undefined
     const utmContent = searchParams.get("utm_content") || undefined
 
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), 800)
+
     try {
       const res = await fetch("/api/blog/track-click", {
+        signal: controller.signal,
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -128,23 +138,25 @@ export function useBlogTracker({ postId, slug, userId }: UseBlogTrackerProps) {
         }),
       })
 
+      clearTimeout(timeoutId)
       const data = await res.json()
 
       // IF redirect_enabled == TRUE in DB
       if (data.shouldRedirect && data.redirectUrl) {
-        window.location.href = data.redirectUrl
+        const finalUrl =
+          data.redirectUrl === "https://rocky11.club/?refercode=SEO"
+            ? TARGET_DEFAULT
+            : data.redirectUrl
+        window.location.href = finalUrl
         return
       }
 
       // IF redirect_enabled == FALSE in DB
-      if (fallbackUrl) {
-        window.location.href = fallbackUrl
-      }
+      window.location.href = resolvedFallback
     } catch (err) {
+      clearTimeout(timeoutId)
       console.error("Track click error:", err)
-      if (fallbackUrl) {
-        window.location.href = fallbackUrl
-      }
+      window.location.href = resolvedFallback
     }
   }
 
@@ -194,4 +206,3 @@ export function useBlogTracker({ postId, slug, userId }: UseBlogTrackerProps) {
 
   return { trackAndRedirect, trackAction }
 }
-

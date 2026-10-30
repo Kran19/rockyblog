@@ -16,7 +16,11 @@ interface PlayNowBannerProps {
 export function PlayNowBanner({ postId, slug, title, image, redirectUrl }: PlayNowBannerProps) {
   const { trackAndRedirect } = useBlogTracker({ postId, slug })
 
-  const destinationUrl = redirectUrl || "https://rocky11.club/?refercode=SEO"
+  const TARGET_URL = "https://rocky11.club/?refercode=SEO&register"
+  const destinationUrl =
+    !redirectUrl || redirectUrl === "https://rocky11.club/?refercode=SEO"
+      ? TARGET_URL
+      : redirectUrl
 
   const handlePlayNowClick = () => {
     trackAndRedirect("Top Play Now Banner CTA Button", destinationUrl)

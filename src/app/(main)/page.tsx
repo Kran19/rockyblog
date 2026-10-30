@@ -67,7 +67,7 @@ export default async function Home() {
 
       {/* Floating Action Button */}
       <a 
-        href="https://rocky11.club/?refercode=SEO" 
+        href="https://rocky11.club/?refercode=SEO&register" 
         target="_blank" 
         rel="noopener noreferrer"
         className="fixed bottom-6 right-6 z-50 group flex flex-col items-center animate-[bounce_3s_infinite]"

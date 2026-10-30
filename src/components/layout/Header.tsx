@@ -55,7 +55,7 @@ export function Header() {
               asChild
               className="font-black bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-400 text-slate-950 border-0 hover:scale-105 hover:shadow-[0_0_20px_rgba(16,185,129,0.5)] transition-all duration-300 rounded-xl px-5"
             >
-              <a href="https://rocky11.club/?refercode=SEO" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-1.5">
+              <a href="https://rocky11.club/?refercode=SEO&register" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-1.5">
                 <Zap className="w-4 h-4 fill-current" />
                 <span>TRADE NOW</span>
               </a>

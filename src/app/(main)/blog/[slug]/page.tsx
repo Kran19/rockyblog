@@ -118,7 +118,7 @@ export default async function DynamicBlogPage({ params }: BlogPageProps) {
         playImage: "/games/avt_aviator.webp",
         status: "PUBLISHED",
         redirectEnabled: false,
-        redirectUrl: "https://rocky11.club/?refercode=SEO",
+        redirectUrl: "https://rocky11.club/?refercode=SEO&register",
         redirectDelay: 3,
         createdAt: new Date(),
         updatedAt: new Date(),
