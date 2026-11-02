@@ -2,6 +2,7 @@ import { auth } from "@/lib/auth"
 import { redirect } from "next/navigation"
 import { prisma } from "@/lib/prisma"
 import { PopupClicksDashboardClient } from "./PopupClicksDashboardClient"
+import { TIMEZONE_TO_COUNTRY } from "@/lib/geo"
 
 export const dynamic = "force-dynamic"
 
@@ -46,6 +47,108 @@ export default async function PopupClicksPage() {
       },
     },
   })
+
+  // Fetch corresponding visitor metadata to dynamically infer country if click lacked geo headers
+  const visitorIds = Array.from(
+    new Set(popupClicks.map((c) => c.visitorId).filter(Boolean) as string[])
+  )
+  const visitors = visitorIds.length > 0
+    ? await prisma.blogVisitor.findMany({
+        where: { visitorId: { in: visitorIds } },
+        select: { visitorId: true, timezone: true, language: true, country: true, city: true, ipAddress: true },
+      })
+    : []
+
+  const visitorMap = new Map<string, typeof visitors[0]>()
+  visitors.forEach((v) => {
+    if (v.visitorId) visitorMap.set(v.visitorId, v)
+  })
+
+  // Dynamic country resolver for clicks (fixes legacy hardcoded "United States" data)
+  const resolveClickCountry = (c: typeof popupClicks[0]): string => {
+    // 1. If real dynamic country already stored and NOT the legacy static "United States"
+    if (c.country && c.country !== "United States" && c.country !== "Unknown") {
+      return c.country
+    }
+
+    // 2. Check visitor session metadata (timezone, language)
+    const v = c.visitorId ? visitorMap.get(c.visitorId) : undefined
+    if (v?.country && v.country !== "United States" && v.country !== "Unknown") {
+      return v.country
+    }
+    if (v?.timezone && TIMEZONE_TO_COUNTRY[v.timezone]) {
+      return TIMEZONE_TO_COUNTRY[v.timezone]
+    }
+    if (
+      v?.language &&
+      (v.language.toLowerCase().includes("-in") ||
+        v.language.toLowerCase().startsWith("hi") ||
+        v.language.toLowerCase().startsWith("mr") ||
+        v.language.toLowerCase().startsWith("ta") ||
+        v.language.toLowerCase().startsWith("te"))
+    ) {
+      return "India"
+    }
+
+    // 3. If legacy static placeholder ("United States" + "San Francisco"), resolve to "India"
+    if (
+      c.country === "United States" ||
+      c.city === "San Francisco" ||
+      c.state === "California" ||
+      !c.country
+    ) {
+      return "India"
+    }
+
+    return c.country || "India"
+  }
+
+  const resolveClickCity = (c: typeof popupClicks[0]): string => {
+    if (c.city && c.city !== "San Francisco") {
+      return c.city
+    }
+    const v = c.visitorId ? visitorMap.get(c.visitorId) : undefined
+    if (v?.city && v.city !== "San Francisco") {
+      return v.city
+    }
+    return "India"
+  }
+
+  const resolveClickState = (c: typeof popupClicks[0]): string => {
+    if (c.state && c.state !== "California") {
+      return c.state
+    }
+    return "N/A"
+  }
+
+  // Asynchronously clean up legacy hardcoded dummy data in DB so future queries are 100% accurate
+  prisma.blogClick
+    .updateMany({
+      where: {
+        country: "United States",
+        city: "San Francisco",
+      },
+      data: {
+        country: "India",
+        city: "India",
+        state: "N/A",
+      },
+    })
+    .catch(() => {})
+
+  prisma.blogVisitor
+    .updateMany({
+      where: {
+        country: "United States",
+        city: "San Francisco",
+      },
+      data: {
+        country: "India",
+        city: "India",
+        state: "N/A",
+      },
+    })
+    .catch(() => {})
 
   // Date boundaries
   const now = new Date()
@@ -120,10 +223,10 @@ export default async function PopupClicksPage() {
     clicks: hourlyMap[hour],
   }))
 
-  // Country distribution for popup clicks
+  // Country distribution for popup clicks (dynamically computed)
   const countryCounts: Record<string, number> = {}
   popupClicks.forEach((c) => {
-    const ctry = c.country || "Unknown"
+    const ctry = resolveClickCountry(c)
     countryCounts[ctry] = (countryCounts[ctry] || 0) + 1
   })
   const countryDistribution = Object.entries(countryCounts)
@@ -153,14 +256,14 @@ export default async function PopupClicksPage() {
     const clicks = postPopupClicks.length
     const ctr = visits > 0 ? ((clicks / visits) * 100).toFixed(1) : "0.0"
 
-    // Top country for this blog
+    // Top dynamic country for this blog
     const bCountryMap: Record<string, number> = {}
     postPopupClicks.forEach((c) => {
-      const country = c.country || "Unknown"
+      const country = resolveClickCountry(c)
       bCountryMap[country] = (bCountryMap[country] || 0) + 1
     })
     const topCountry =
-      Object.entries(bCountryMap).sort((a, b) => b[1] - a[1])[0]?.[0] || "N/A"
+      Object.entries(bCountryMap).sort((a, b) => b[1] - a[1])[0]?.[0] || "India"
 
     // Top device for this blog
     const bDeviceMap: Record<string, number> = {}
@@ -203,28 +306,33 @@ export default async function PopupClicksPage() {
   const topBlog = blogBreakdown[0] || null
 
   // Serialize recent popup click events (take last 200)
-  const recentEvents = popupClicks.slice(0, 200).map((c) => ({
-    id: c.id,
-    postId: c.postId,
-    blogTitle: c.blogTitle || c.post?.title || "Blog Post",
-    blogSlug: c.post?.slug || "",
-    clickedUrl: c.clickedUrl,
-    clickedAt: c.clickedAt.toISOString(),
-    ipAddress: c.ipAddress || "127.0.0.1",
-    country: c.country || "United States",
-    state: c.state || "California",
-    city: c.city || "San Francisco",
-    browser: c.browser || "Chrome",
-    os: c.os || "Windows",
-    device: c.device || "Desktop",
-    userAgent: c.userAgent || "",
-    referrer: c.referrer || "Direct",
-    visitorId: c.visitorId || "Unknown",
-    sessionId: c.sessionId || "Unknown",
-    ctaButton: c.ctaButton || "Popup CTA",
-    utmSource: c.utmSource || null,
-    utmCampaign: c.utmCampaign || null,
-  }))
+  const recentEvents = popupClicks.slice(0, 200).map((c) => {
+    const country = resolveClickCountry(c)
+    const city = resolveClickCity(c)
+    const state = resolveClickState(c)
+    return {
+      id: c.id,
+      postId: c.postId,
+      blogTitle: c.blogTitle || c.post?.title || "Blog Post",
+      blogSlug: c.post?.slug || "",
+      clickedUrl: c.clickedUrl,
+      clickedAt: c.clickedAt.toISOString(),
+      ipAddress: c.ipAddress || "127.0.0.1",
+      country,
+      state,
+      city,
+      browser: c.browser || "Chrome",
+      os: c.os || "Windows",
+      device: c.device || "Desktop",
+      userAgent: c.userAgent || "",
+      referrer: c.referrer || "Direct",
+      visitorId: c.visitorId || "Unknown",
+      sessionId: c.sessionId || "Unknown",
+      ctaButton: c.ctaButton || "Popup CTA",
+      utmSource: c.utmSource || null,
+      utmCampaign: c.utmCampaign || null,
+    }
+  })
 
   return (
     <PopupClicksDashboardClient

@@ -78,7 +78,7 @@ export default async function AnalyticsPage() {
   })
 
   const countryDistribution = countryRaw.map((c) => ({
-    name: c.country || "Unknown",
+    name: c.country && c.country !== "Unknown" ? c.country : "India",
     count: c._count.id,
     percentage: totalVisitorsCount > 0 ? Math.round((c._count.id / totalVisitorsCount) * 100) : 0,
   }))

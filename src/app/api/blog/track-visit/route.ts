@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
+import { detectGeoLocation } from "@/lib/geo"
 
 export async function POST(req: NextRequest) {
   try {
@@ -14,6 +15,7 @@ export async function POST(req: NextRequest) {
       screenResolution,
       language,
       timezone,
+      country: clientCountry,
       userAgent,
       referrer,
       landingPage,
@@ -29,10 +31,18 @@ export async function POST(req: NextRequest) {
     const realIp = req.headers.get("x-real-ip")
     const ipAddress = forwarded ? forwarded.split(",")[0].trim() : realIp || "127.0.0.1"
 
-    // Geolocation Header fallback (e.g., Vercel / Cloudflare headers)
-    const country = req.headers.get("x-vercel-ip-country") || req.headers.get("cf-ipcountry") || "United States"
-    const state = req.headers.get("x-vercel-ip-country-region") || "California"
-    const city = req.headers.get("x-vercel-ip-city") || "San Francisco"
+    // Dynamic Geolocation Detection (Client -> CDN Headers -> Timezone -> IP lookup)
+    const geo = await detectGeoLocation({
+      headers: req.headers,
+      ipAddress,
+      clientCountry,
+      timezone,
+      language,
+    })
+
+    const country = geo.country
+    const state = geo.state
+    const city = geo.city
 
     // Check if returning visitor
     const previousVisit = await prisma.blogVisitor.findFirst({

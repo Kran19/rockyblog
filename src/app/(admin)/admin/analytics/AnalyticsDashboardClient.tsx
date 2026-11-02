@@ -302,7 +302,7 @@ export function AnalyticsDashboardClient({
                       <div className="text-[10px] text-slate-500 font-mono truncate max-w-[120px]">{v.visitorId}</div>
                     </td>
                     <td className="py-3.5 px-4">
-                      {v.country || "United States"}, {v.city || "San Francisco"}
+                      {v.country || "India"}, {v.city && v.city !== "San Francisco" ? v.city : "Online"}
                     </td>
                     <td className="py-3.5 px-4">
                       {v.browser} / {v.os}

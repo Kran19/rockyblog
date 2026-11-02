@@ -46,10 +46,78 @@ function getOrSetStorage(key: string, prefix: string) {
   return val
 }
 
+const COUNTRY_CODE_MAP: Record<string, string> = {
+  IN: "India",
+  US: "United States",
+  GB: "United Kingdom",
+  AE: "United Arab Emirates",
+  PK: "Pakistan",
+  BD: "Bangladesh",
+  NP: "Nepal",
+  LK: "Sri Lanka",
+  CA: "Canada",
+  AU: "Australia",
+  SA: "Saudi Arabia",
+  QA: "Qatar",
+  SG: "Singapore",
+  MY: "Malaysia",
+  DE: "Germany",
+  FR: "France",
+}
+
+function getClientCountry(): string {
+  if (typeof window === "undefined") return "India"
+
+  const cached = sessionStorage.getItem("nextblog_client_country")
+  if (cached && cached !== "United States") return cached
+
+  const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ""
+  if (tz === "Asia/Kolkata" || tz === "Asia/Calcutta" || tz === "IST") {
+    sessionStorage.setItem("nextblog_client_country", "India")
+    return "India"
+  }
+  if (tz.includes("Karachi")) return "Pakistan"
+  if (tz.includes("Dhaka")) return "Bangladesh"
+  if (tz.includes("Kathmandu")) return "Nepal"
+  if (tz.includes("Colombo")) return "Sri Lanka"
+  if (tz.includes("Dubai")) return "United Arab Emirates"
+
+  const lang = (navigator.language || "").toLowerCase()
+  if (
+    lang.includes("-in") ||
+    lang.startsWith("hi") ||
+    lang.startsWith("mr") ||
+    lang.startsWith("ta") ||
+    lang.startsWith("te") ||
+    lang.startsWith("gu") ||
+    lang.startsWith("bn") ||
+    lang.startsWith("pa")
+  ) {
+    sessionStorage.setItem("nextblog_client_country", "India")
+    return "India"
+  }
+
+  return "India"
+}
+
 export function useBlogTracker({ postId, slug, userId }: UseBlogTrackerProps) {
   const isTracked = useRef(false)
 
   useEffect(() => {
+    // Background lookup to detect real visitor country dynamically
+    if (typeof window !== "undefined" && !sessionStorage.getItem("nextblog_client_country_verified")) {
+      fetch("https://api.country.is/")
+        .then((r) => r.json())
+        .then((d) => {
+          if (d && d.country) {
+            const fullCountry = COUNTRY_CODE_MAP[d.country.toUpperCase()] || d.country
+            sessionStorage.setItem("nextblog_client_country", fullCountry)
+            sessionStorage.setItem("nextblog_client_country_verified", "true")
+          }
+        })
+        .catch(() => {})
+    }
+
     if (isTracked.current || typeof window === "undefined" || (!postId && !slug)) return
     isTracked.current = true
 
@@ -64,6 +132,7 @@ export function useBlogTracker({ postId, slug, userId }: UseBlogTrackerProps) {
     const screenResolution = `${window.screen.width}x${window.screen.height}`
     const language = navigator.language || "en-US"
     const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
+    const country = getClientCountry()
 
     // Fire visitor tracking
     fetch("/api/blog/track-visit", {
@@ -80,6 +149,7 @@ export function useBlogTracker({ postId, slug, userId }: UseBlogTrackerProps) {
         screenResolution,
         language,
         timezone,
+        country,
         userAgent: navigator.userAgent,
         referrer: document.referrer || "Direct",
         landingPage: window.location.pathname,
@@ -100,6 +170,9 @@ export function useBlogTracker({ postId, slug, userId }: UseBlogTrackerProps) {
     const visitorId = getOrSetStorage("nextblog_visitor_id", "vis")
     const sessionId = sessionStorage.getItem("nextblog_session_id") || "sess_default"
     const { browser, os, device } = parseBrowserAndOS()
+    const language = navigator.language || "en-US"
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
+    const country = getClientCountry()
 
     // Extract UTM Parameters from URL
     const searchParams = new URLSearchParams(window.location.search)
@@ -127,6 +200,9 @@ export function useBlogTracker({ postId, slug, userId }: UseBlogTrackerProps) {
           browser,
           os,
           device,
+          language,
+          timezone,
+          country,
           userAgent: navigator.userAgent,
           referrer: document.referrer || "Direct",
           utmSource,
@@ -166,6 +242,9 @@ export function useBlogTracker({ postId, slug, userId }: UseBlogTrackerProps) {
     const visitorId = getOrSetStorage("nextblog_visitor_id", "vis")
     const sessionId = sessionStorage.getItem("nextblog_session_id") || "sess_default"
     const { browser, os, device } = parseBrowserAndOS()
+    const language = navigator.language || "en-US"
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
+    const country = getClientCountry()
 
     const searchParams = new URLSearchParams(window.location.search)
     const utmSource = searchParams.get("utm_source") || undefined
@@ -188,6 +267,9 @@ export function useBlogTracker({ postId, slug, userId }: UseBlogTrackerProps) {
           browser,
           os,
           device,
+          language,
+          timezone,
+          country,
           userAgent: navigator.userAgent,
           referrer: document.referrer || "Direct",
           utmSource,

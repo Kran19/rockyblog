@@ -1000,8 +1000,8 @@ export function PopupClicksDashboardClient({
 
                       {/* Location */}
                       <td className="py-4 px-4 text-slate-300">
-                        <div className="font-semibold">{evt.city || "San Francisco"}</div>
-                        <div className="text-[10px] text-slate-400">{evt.country || "United States"}</div>
+                        <div className="font-semibold">{evt.city && evt.city !== "San Francisco" ? evt.city : evt.country}</div>
+                        <div className="text-[10px] text-slate-400">{evt.country}</div>
                       </td>
 
                       {/* Device & OS */}
